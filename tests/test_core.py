@@ -10,6 +10,8 @@ from transitions import MachineError
 from transitions import State
 from transitions.core import listify
 from unittest import TestCase
+import warnings
+warnings.filterwarnings('error', category=PendingDeprecationWarning, message=".*0\.5\.0.*")
 
 try:
     from unittest.mock import MagicMock
@@ -646,3 +648,11 @@ class TestTransitions(TestCase):
         self.assertEqual(len(machine.get_triggers('C')), 1)
         # self stuff machine should have to-transitions to every state
         self.assertEqual(len(self.stuff.machine.get_triggers('B')), len(self.stuff.machine.states))
+
+    # does not work with python 3.3 even though the warnings are shown in the interpreter
+    # def test_warning(self):
+    #     with self.assertRaises(PendingDeprecationWarning):
+    #         m = Machine(None)
+    #
+    #     with self.assertRaises(PendingDeprecationWarning):
+    #         m = Machine(initial=None)

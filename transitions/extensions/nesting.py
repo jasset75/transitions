@@ -153,6 +153,7 @@ class HierarchicalMachine(Machine):
         super(HierarchicalMachine, self).add_model(model)
         models = listify(model)
         for m in models:
+            m = self if m == 'self' else m
             if hasattr(m, 'to'):
                 logger.warn("%sModel already has a 'to'-method. It will NOT be overwritten by NestedMachine", self.id)
             else:

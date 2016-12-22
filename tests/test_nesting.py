@@ -252,14 +252,14 @@ class TestTransitions(TestsCore):
         self.assertEqual(m.state, 'ninth')
 
         # Include initial state in loop
-        m = self.stuff.machine_cls(None, states)
+        m = self.stuff.machine_cls('self', states)
         m.add_ordered_transitions(loop_includes_initial=False)
         m.to_ninth()
         m.next_state()
         self.assertEqual(m.state, 'first')
 
         # Test user-determined sequence and trigger name
-        m = self.stuff.machine_cls(None, states, initial='first')
+        m = self.stuff.machine_cls('self', states, initial='first')
         m.add_ordered_transitions(['first', 'ninth'], trigger='advance')
         m.advance()
         self.assertEqual(m.state, 'ninth')
@@ -267,8 +267,7 @@ class TestTransitions(TestsCore):
         self.assertEqual(m.state, 'first')
 
         # Via init argument
-        m = self.stuff.machine_cls(
-            None, states, initial='first', ordered_transitions=True)
+        m = self.stuff.machine_cls('self', states, initial='first', ordered_transitions=True)
         m.next_state()
         self.assertEqual(m.state, 'first{0}second'.format(State.separator))
 
@@ -304,7 +303,7 @@ class TestTransitions(TestsCore):
             {'trigger': 'run', 'source': 'B', 'dest': 'C'}
         ]
 
-        m = self.stuff.machine_cls(None, states=['A', 'B', 'C'], transitions=transitions,
+        m = self.stuff.machine_cls(states=['A', 'B', 'C'], transitions=transitions,
                                    before_state_change='before_state_change',
                                    after_state_change='after_state_change', send_event=True,
                                    initial='A', auto_transitions=True)
@@ -471,10 +470,9 @@ class TestWithGraphTransitions(TestTransitions):
                                                        {'name': '3', 'children': ['a', 'b', 'c']}]}, 'D', 'E', 'F']
 
         State.separator = '/'
-        machine = GraphMachine(None, states, initial='A',
+        machine = GraphMachine('self', states, initial='A',
                                auto_transitions=False,
-                               ignore_invalid_triggers=True,
-                               )
+                               ignore_invalid_triggers=True)
         machine.add_ordered_transitions(trigger='next_state')
         machine.next_state()
         self.assertEqual(machine.state, 'B')
